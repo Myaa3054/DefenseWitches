@@ -66,8 +66,8 @@ public class Enemy : Token
     MoveNext();
     // _prevに反映する
     _prev.Copy(_next);
-    // 一つ左にずらす
-    _prev.x -= Field.GetChipSize();
+    // 一つ下にずらす
+    _prev.y -= Field.GetChipSize();
     // 一度座標を更新しておく
     FixedUpdate();
 
@@ -104,7 +104,7 @@ public class Enemy : Token
     Y = Mathf.Lerp(_prev.y, _next.y, _tSpeed / 100.0f);
 
     // 画像の角度を更新
-    UpdateAngle();
+    //UpdateAngle();
 	}
 
   /// 次の移動先に進める
