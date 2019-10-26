@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// 敵の生成
-public class EnemyGenerator
+public class EnemyGenerator2
 {
     /// ①メンバ変数を定義
     // 敵の移動経路
@@ -21,7 +21,7 @@ public class EnemyGenerator
     }
 
     /// ②コンストラクタ
-    public EnemyGenerator(List<Vec2D> pathList)
+    public EnemyGenerator2(List<Vec2D> pathList)
     {
     _pathList = pathList;
     }
