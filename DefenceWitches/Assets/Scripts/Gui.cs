@@ -48,19 +48,19 @@ public class Gui
   {
     // Wave数を更新
     _txtWave.SetLabelFormat("Wave: {0}", Global.Wave);
-    _txtMoney.SetLabelFormat("Money: ${0}", Global.Money);
+    _txtMoney.SetLabelFormat("MP: {0}", Global.Money);
     // 生産コストを取得する
     int cost = Cost.TowerProduction();
     _txtCost.Label = "";
     if (selMode == GameMgr.eSelMode.Buy)
     {
       // 購入モードのみテキストを設定する
-      _txtCost.SetLabelFormat("(cost ${0})", cost);
+      _txtCost.SetLabelFormat("(消費 {0})", cost);
     }
     // 購入ボタンを押せるかどうかチェック
     _btnBuy.Enabled = (Global.Money >= cost);
     // 購入コストを表示する
-    _btnBuy.FormatLabel("Buy (${0})", cost);
+    _btnBuy.FormatLabel("呼び出す ({0})", cost);
     // ライフ表示
     for (int i = 0; i < Global.LIFE_MAX; i++)
     {
