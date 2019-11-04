@@ -205,5 +205,4 @@ public class Enemy : Token
     // 親の消滅処理を呼び出す
     base.Vanish();
     }
-
 }

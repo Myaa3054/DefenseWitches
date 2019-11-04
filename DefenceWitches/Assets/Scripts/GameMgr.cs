@@ -54,60 +54,58 @@ public class GameMgr : MonoBehaviour
 
     void Start ()
     {
-    // ゲームパラメータ初期化 
-    Global.Init();
+        // ゲームパラメータ初期化
+        Global.Init();
 
-    // 敵管理を生成
-    Enemy.parent = new TokenMgr<Enemy>("Enemy", 128);
-    Enemy2.parent = new TokenMgr<Enemy2>("Enemy2", 128);
-    // ショット管理を生成
-    Shot.parent = new TokenMgr<Shot>("Shot", 128);
-    // パーティクル管理を生成
-    Particle.parent = new TokenMgr<Particle>("Particle", 256);
-    // タワー管理を生成
-    Tower.parent = new TokenMgr<Tower>("Tower", 64);
+        // 敵管理を生成
+        Enemy.parent = new TokenMgr<Enemy>("Enemy", 128);
+        Enemy2.parent = new TokenMgr<Enemy2>("Enemy2", 128);
+        // ショット管理を生成
+        Shot.parent = new TokenMgr<Shot>("Shot", 128);
+        // パーティクル管理を生成
+        Particle.parent = new TokenMgr<Particle>("Particle", 256);
+        // タワー管理を生成
+        Tower.parent = new TokenMgr<Tower>("Tower", 64);
+        // マップ管理を生成
+        // プレハブを取得
+        GameObject prefab = null;
+        prefab = Util.GetPrefab(prefab, "Field");
+        // インスタンス生成
+        Field field = Field.CreateInstance2<Field>(prefab, 0, 0);
+        // マップ読み込み
+        field.Load();
+        // パスを取得
+        _path = field.Path;
+        _path2 = field.Path2;
 
-    // マップ管理を生成
-    // プレハブを取得
-    GameObject prefab = null;
-    prefab = Util.GetPrefab(prefab, "Field");
-    // インスタンス生成
-    Field field = Field.CreateInstance2<Field>(prefab, 0, 0);
-    // マップ読み込み
-    field.Load();
-    // パスを取得
-    _path = field.Path;
-    _path2 = field.Path2;
+        // コリジョンレイヤーを取得
+        _lCollision = field.lCollision;
 
-    // コリジョンレイヤーを取得
-    _lCollision = field.lCollision;
+        // カーソルを取得
+        _cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
 
-    // カーソルを取得
-    _cursor = GameObject.Find("Cursor").GetComponent<Cursor>();
+        // GUIを生成
+        _gui = new Gui();
 
-    // GUIを生成
-    _gui = new Gui();
+        // 敵生成管理を生成
+        _enemyGenerator = new EnemyGenerator(_path);
+        _enemyGenerator2 = new EnemyGenerator2(_path2);
 
-    // 敵生成管理を生成
-    _enemyGenerator = new EnemyGenerator(_path);
-    _enemyGenerator2 = new EnemyGenerator2(_path2);
-    
-    // Wave開始演出を取得
-    _waveStart = MyCanvas.Find<WaveStart>("TextWaveStart");
+        // Wave開始演出を取得
+        _waveStart = MyCanvas.Find<WaveStart>("TextWaveStart");
 
-    // 射程範囲カーソルを取得する
-    _cursorRange = GameObject.Find("CursorRange").GetComponent<CursorRange>();
+        // 射程範囲カーソルを取得する
+        _cursorRange = GameObject.Find("CursorRange").GetComponent<CursorRange>();
 
-    // 初期状態は選択しないモード
-    ChangeSelMode(eSelMode.None);
+        // 初期状態は選択しないモード
+        ChangeSelMode(eSelMode.None);
     }
 
     void Update()
     {
         // GUIを更新
         _gui.Update(_selMode, _selTower);
-
-
+        
         // カーソルを更新
         _cursor.Proc(_lCollision);
 
@@ -120,6 +118,7 @@ public class GameMgr : MonoBehaviour
             {
                 _enemyGenerator.Start(Global.Wave);
                 _enemyGenerator2.Start(Global.Wave);
+
                 // Wave開始演出を呼び出す (※ここを追加)
                 _waveStart.Begin(Global.Wave);
                 // メイン状態に遷移する
@@ -168,69 +167,70 @@ public class GameMgr : MonoBehaviour
     // 更新・メイン
     void UpdateMain()
     {
-    // 敵生成管理の更新
-    _enemyGenerator.Update();
-    _enemyGenerator2.Update();
-    // 配置できるかどうか判定
-    if (_cursor.Placeable == false)
-    {
-        // 配置できないのでここでおしまい
-        return;
-    }
+        // 敵生成管理の更新
+        _enemyGenerator.Update();
+        _enemyGenerator2.Update();
 
-    // カーソルの下にあるオブジェクトをチェック
-    int mask = 1 << LayerMask.NameToLayer("Tower");
-    Collider2D col = Physics2D.OverlapPoint(_cursor.GetPosition(), mask);
-    _selObj = null;
-    if (col != null)
-    {
-        // 選択中のオブジェクトを格納
-        _selObj = col.gameObject;
-    }
-
-    // マウスクリック判定
-    if (Input.GetMouseButtonDown(0) == false)
-    {
-        //クリックしていないので以下の処理は不要
-        return;
-    }
-
-    if (_selObj != null)
-    {
-        // 砲台をクリックした
-        // 選択した砲台オブジェクトを取得
-        _selTower = _selObj.GetComponent<Tower>();
-
-        // アップグレードモードに移行する
-        ChangeSelMode(eSelMode.Upgrade);
-    }
-
-    switch (_selMode)
-    {
-        case eSelMode.Buy:
-        if (_cursor.SelObj == null)
+        // 配置できるかどうか判定
+        if (_cursor.Placeable == false)
         {
-            // 所持金を減らす
-            int cost = Cost.TowerProduction();
-            Global.UseMoney(cost);
-            // 何もないので砲台を配置
-            Tower.Add(_cursor.X, _cursor.Y);
-            // 次のタワーの生産コストを取得する
-            int cost2 = Cost.TowerProduction();
-            if (Global.Money < cost2)
-            {
-            // お金が足りないので通常モードに戻る
-            ChangeSelMode(eSelMode.None);
-            }
+            // 配置できないのでここでおしまい
+            return;
         }
-        break;
-    }
+
+        // カーソルの下にあるオブジェクトをチェック
+        int mask = 1 << LayerMask.NameToLayer("Tower");
+        Collider2D col = Physics2D.OverlapPoint(_cursor.GetPosition(), mask);
+        _selObj = null;
+        if (col != null)
+        {
+            // 選択中のオブジェクトを格納
+            _selObj = col.gameObject;
+        }
+
+        // マウスクリック判定
+        if (Input.GetMouseButtonDown(0) == false)
+        {
+            //クリックしていないので以下の処理は不要
+            return;
+        }
+
+        if (_selObj != null)
+        {
+            // 砲台をクリックした
+            // 選択した砲台オブジェクトを取得
+            _selTower = _selObj.GetComponent<Tower>();
+
+            // アップグレードモードに移行する
+            ChangeSelMode(eSelMode.Upgrade);
+        }
+
+        switch (_selMode)
+        {
+            case eSelMode.Buy:
+            if (_cursor.SelObj == null)
+            {
+                // 所持金を減らす
+                int cost = Cost.TowerProduction();
+                Global.UseMoney(cost);
+                // 何もないので砲台を配置
+                Tower.Add(_cursor.X, _cursor.Y);
+                // 次のタワーの生産コストを取得する
+                int cost2 = Cost.TowerProduction();
+                if (Global.Money < cost2)
+                {
+                // お金が足りないので通常モードに戻る
+                ChangeSelMode(eSelMode.None);
+                }
+            }
+            break;
+        }
     }
 
     /// Waveをクリアしたかどうか
     bool IsWaveClear()
     {
-    if (_enemyGenerator.Number > 0 || _enemyGenerator2.Number > 0)
+    if (_enemyGenerator.Number > 0 || _enemyGenerator2.Number > 0 )
     {
         // 敵がまだ出現する
         return false;
@@ -338,5 +338,5 @@ public class GameMgr : MonoBehaviour
 
     // 射程範囲カーソルの大きさを反映
     _cursorRange.SetVisible(true, _selTower.LvRange);
-    }
+}
 }

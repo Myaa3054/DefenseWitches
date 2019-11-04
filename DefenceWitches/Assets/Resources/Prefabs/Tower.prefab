@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 137948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.537, y: 0.342, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.1, y: 0.1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -71,7 +71,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300004, guid: cd0f6bcf165984fbc9c929688610dee1, type: 3}
+  m_Sprite: {fileID: 7152930139536384079, guid: 3fa00dcd6748df34182d6431b94251d2,
+    type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -91,9 +92,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 137948}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 19743a2a39b28492ba3c570f4242aa28, type: 3}
+  m_Script: {fileID: 11500000, guid: 3bce60da20daa5148b9214756593be01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  spr0: {fileID: 7152930139536384079, guid: 3fa00dcd6748df34182d6431b94251d2, type: 3}
+  spr1: {fileID: -5725962078152895296, guid: 3fa00dcd6748df34182d6431b94251d2, type: 3}
 --- !u!58 &5876330
 CircleCollider2D:
   m_ObjectHideFlags: 0
