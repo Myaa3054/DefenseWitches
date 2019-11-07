@@ -33,8 +33,6 @@ public class GameMgr : MonoBehaviour
     // 選択中のタワー
     Tower _selTower = null;
 
-    // 出現タイマー
-    int _tAppear = 0;
     // パス
     List<Vec2D> _path;
     List<Vec2D> _path2;

@@ -72,17 +72,17 @@ public class Field : Token
     var spr = GetChipSprite();
     var sprW = spr.bounds.size.x;
     //1.07は黒帯の長さ
-    return (int)((x - min.x - 1.07f) / sprW);
+    return (int)((x - min.x - 1.07f - sprW/2) / sprW);
     }
 
-    /// ワールド座標をチップ座標系のX座標に変換する.
+    /// ワールド座標をチップ座標系のY座標に変換する.
     public static int ToChipY(float y)
     {
     Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
     var spr = GetChipSprite();
     var sprH = spr.bounds.size.y;
 
-    return (int)((y - max.y) / -sprH);
+    return (int)((y - max.y + sprH/2) / -sprH);
     }
 
     public void Load()
