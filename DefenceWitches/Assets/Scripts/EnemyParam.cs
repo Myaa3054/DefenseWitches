@@ -35,7 +35,7 @@ public class EnemyParam
   /// ⑤敵の出現数を取得する
   public static int GenerationNumber()
   {
-    return 5 + Global.Wave;
+    return 1 + Global.Wave;
   }
 
   /// ⑥敵の出現間隔を取得する
