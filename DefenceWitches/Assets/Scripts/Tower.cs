@@ -136,7 +136,7 @@ public class Tower : Token
     }
 
     void Update ()
-    {   
+    {
         //アニメーション
         _tAnim++;
         if (_tAnim % 32 < 16)
@@ -147,7 +147,7 @@ public class Tower : Token
         {
             SetSprite(spr1);
         }
-    
+
         // インターバルタイマー更新 (※①)
         _tFirerate += Time.deltaTime;
 
@@ -184,18 +184,19 @@ public class Tower : Token
             return;
         }
 
+
         // 現在向いている角度との差を求める
         float dAngle = Mathf.DeltaAngle(Angle, targetAngle);
         // 差の0.2だけ回転する
-        Angle += dAngle * 0.2f;
+        //Angle += dAngle * 0.2f;
         // もう一度角度差を求める(⑦)
-        float dAngle2 = Mathf.DeltaAngle(Angle, targetAngle);
+        //float dAngle2 = Mathf.DeltaAngle(Angle, targetAngle);
 
-        if(Mathf.Abs(dAngle2) > 16)
-        {
-            //角度が大きい(16度より大きい)場合は撃てない
-            return;
-        }
+        // if(Mathf.Abs(dAngle2) > 16)
+        // {
+        //     //角度が大きい(16度より大きい)場合は撃てない
+        //     return;
+        // }
 
         // インターバルチェック (※②)
         if(_tFirerate < _firerate)
@@ -205,7 +206,7 @@ public class Tower : Token
         }
 
         // ショットを撃つ
-        Shot.Add(X, Y, Angle, SHOT_SPEED, _power);
+        Shot.Add(X, Y, targetAngle, SHOT_SPEED, _power);
 
         // インターバルを入れる
         _tFirerate = 0;

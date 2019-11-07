@@ -103,7 +103,7 @@ public class GameMgr : MonoBehaviour
     {
         // GUIを更新
         _gui.Update(_selMode, _selTower);
-        
+
         // カーソルを更新
         _cursor.Proc(_lCollision);
 
