@@ -152,31 +152,19 @@ public class Tower : Token
         _tFirerate += Time.deltaTime;
 
         // 一番近い敵を求める(④)
-        Enemy e1 = Enemy.parent.Nearest(this);
-        Enemy2 e2 = Enemy2.parent.Nearest(this);
-        if (e1 == null && e2 == null)
+        Enemy e = Enemy.parent.Nearest(this);
+        if (e == null)
         {
         // 敵がいないので何もしない
         return;
         }
         // 敵への距離を取得する(⑤)
-        float dist1 = Util.DistanceBetween(this, e1);
-        float dist2 = Util.DistanceBetween(this, e2);
-        float dist;
+        float dist = Util.DistanceBetween(this, e);
         float targetAngle;
 
-        if (dist1 < dist2)
-        {
-            dist = dist1;
-            // 敵への角度を取得(⑥)
-            targetAngle = Util.AngleBetween(this, e1);
-        }
-        else
-        {
-            dist = dist2;
-            // 敵への角度を取得(⑥)
-            targetAngle = Util.AngleBetween(this, e2);
-        }
+        // 敵への角度を取得(⑥)
+        targetAngle = Util.AngleBetween(this, e);
+       
 
         if (dist > _range)
         {
@@ -184,19 +172,8 @@ public class Tower : Token
             return;
         }
 
-
         // 現在向いている角度との差を求める
         float dAngle = Mathf.DeltaAngle(Angle, targetAngle);
-        // 差の0.2だけ回転する
-        //Angle += dAngle * 0.2f;
-        // もう一度角度差を求める(⑦)
-        //float dAngle2 = Mathf.DeltaAngle(Angle, targetAngle);
-
-        // if(Mathf.Abs(dAngle2) > 16)
-        // {
-        //     //角度が大きい(16度より大きい)場合は撃てない
-        //     return;
-        // }
 
         // インターバルチェック (※②)
         if(_tFirerate < _firerate)

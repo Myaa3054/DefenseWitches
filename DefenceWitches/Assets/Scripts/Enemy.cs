@@ -18,31 +18,35 @@ public class Enemy : Token
         }
         e.Init(path);
         return e;
-    }
+    }// プレハブから敵を生成
 
     // アニメーション用のスプライト
     public Sprite spr0;
     public Sprite spr1;
 
     // HP
-    int _hp;
+    public int _hp;
 
     // 所持金
-    int _money;
+    public int _money;
 
     // アニメーションタイマー
-    int _tAnim = 0;
+    protected int _tAnim = 0;
 
     // 速度パラメータ
-    float _speed = 0; // 速度
-    float _tSpeed = 0; // 補完値(0.0〜100.0)
+    protected float _speed = 0; // 速度
+    protected float _tSpeed = 0; // 補完値(0.0〜100.0)
     // 経路座標のリスト
-    List<Vec2D> _path;
+    public List<Vec2D> _path;
     // 経路の現在の番号
-    int _pathIdx;
+    public int _pathIdx;
     // チップ座標
-    Vec2D _prev; // 1つ前
-    Vec2D _next; // 1つ先
+    protected Vec2D _prev; // 1つ前
+    protected Vec2D _next; // 1つ先
+
+    //反射カウント
+    public static int refcount1;
+    public static int refcount2;
 
     /// 画像の角度を更新
     void UpdateAngle()
@@ -102,21 +106,24 @@ public class Enemy : Token
     // ⑤速度タイマーに対応する位置に線形補間で移動する
     X = Mathf.Lerp(_prev.x, _next.x, _tSpeed / 100.0f);
     Y = Mathf.Lerp(_prev.y, _next.y, _tSpeed / 100.0f);
-
-    // 画像の角度を更新
-    //UpdateAngle();
     }
 
     /// 次の移動先に進める
-    void MoveNext()
+    protected void MoveNext()
     {
     if(_pathIdx >= _path.Count)
     {
         // ゴールにたどりついた
         _tSpeed = 100.0f;
-        // ダメージを与える
-        Global.Damage();
-        // 自爆する
+        if (X < 0)
+        {
+            Global.Damage();
+        }
+        else
+        {
+            Global.Damage2();
+        }
+        //自爆する
         Vanish();
 
         return;
@@ -149,8 +156,14 @@ public class Enemy : Token
 
         if (Exists == false)
         {
-        // 所持金を増やす
-        Global.AddMoney(_money);
+            // 所持金を増やす
+            if (X < 0){
+                Global.AddMoney(_money);
+            }
+
+            else{
+                Global.AddMoney2(_money);
+            }
         }
     }
     }
@@ -158,13 +171,32 @@ public class Enemy : Token
     /// ダメージを受けた
     void Damage(int val)
     {
-    // HPを減らす
-    _hp -= val;
-    if(_hp <= 0)
-    {
-        // HPがなくなったので死亡
-        Vanish();
-    }
+        // HPを減らす
+        _hp -= val;
+        if(_hp <= 0)
+        {
+            // HPがなくなったので死亡
+            if (Y > 0.64)
+            {
+                if (X < 0)
+                {
+                    if (refcount1 > 0)
+                    {
+                        Add(GameMgr._path2);
+                        refcount1 -= 1;
+                    }
+                }
+                else
+                {
+                    if (refcount2 > 0)
+                    {
+                        Add(GameMgr._path);
+                        refcount2 -= 1;
+                    }
+                }
+            }
+            Vanish();
+        }
     }
 
     /// 消滅

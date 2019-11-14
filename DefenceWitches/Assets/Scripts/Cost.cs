@@ -12,7 +12,7 @@ public class Cost
 
     // ②タワー生産コスト＝ 8 * (1.3 ^ タワーの存在数)
     int basic = 8;
-    float ratio = Mathf.Pow(1.3f, num);
+    float ratio = Mathf.Pow(1.1f, num);
 
     // ③小数点は切り捨て
     return (int)(basic * ratio);
@@ -39,8 +39,33 @@ public class Cost
         cost = 20 * Mathf.Pow(1.5f, (lv - 1));
         break;
     }
+    // 小数点以下を切り捨てる
+    return (int)cost;
+  }
 
+    /// アップグレードコストを取得する
+  public static int TowerUpgrade2(Tower2.eUpgrade type, int lv)
+  {
+    float cost = 0;
+    switch (type)
+    {
+      case Tower2.eUpgrade.Range:
+        // 射程範囲
+        cost = 10 * Mathf.Pow(1.5f, (lv - 1));
+        break;
+
+      case Tower2.eUpgrade.Firerate:
+        // 連射速度
+        cost = 15 * Mathf.Pow(1.5f, (lv - 1));
+        break;
+
+      case Tower2.eUpgrade.Power:
+        // 攻撃威力
+        cost = 20 * Mathf.Pow(1.5f, (lv - 1));
+        break;
+    }
     // 小数点以下を切り捨てる
     return (int)cost;
   }
 }
+

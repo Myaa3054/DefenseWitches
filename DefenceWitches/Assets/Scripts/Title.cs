@@ -10,16 +10,19 @@ public class Title : MonoBehaviour
     public GameObject illust; //ここにプレイ方法の書いたオブジェクトを入れる
     // Start is called before the first frame update
    
-    public void OnClick()
+    void Update()
     {
-        scenestate++;
-       if (scenestate == 1)
+        if (Input.GetButtonDown("Done1p") || Input.GetButtonDown("Done2p"))
         {
-            illust.SetActive(true);
-        }
-        if (scenestate >= maxpage) 
-        {
-            SceneManager.LoadScene("Main");
+            scenestate++;
+            if (scenestate == 1)
+            {
+                illust.SetActive(true);
+            }
+            if (scenestate >= maxpage)
+            {
+                SceneManager.LoadScene("Main");
+            }
         }
     }
     // Update is called once per frame

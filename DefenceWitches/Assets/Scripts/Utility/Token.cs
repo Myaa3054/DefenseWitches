@@ -62,7 +62,7 @@ public class Token : MonoBehaviour
   /// 座標(X).
   public float X {
     set {
-      Vector3 pos = transform.position;
+      Vector2 pos = transform.position;
       pos.x = value;
       transform.position = pos;
     }
@@ -72,7 +72,7 @@ public class Token : MonoBehaviour
   /// 座標(Y).
   public float Y {
     set {
-      Vector3 pos = transform.position;
+      Vector2 pos = transform.position;
       pos.y = value;
       transform.position = pos;
     }

@@ -5,8 +5,18 @@ using System.Collections.Generic;
 /// カーソル
 public class Cursor : Token
 {
-    // 速度
-    public Vector2 SPEED = new Vector2(0.1f, 0.1f);
+    // x軸方向に１マス移動するときの距離
+    Vector3 MOVEX = new Vector3(0.32f, 0, 0);
+    // y軸方向に１マス移動するときの距離
+    Vector3 MOVEY = new Vector3(0, 0.32f, 0);
+
+    // 移動速度
+    float step = 2f;
+    // 入力受付時、移動後の位置を算出して保存
+    Vector3 target;
+    // 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
+    Vector3 prevPos;
+
     /// 表示スプライト
     // 四角
     public Sprite sprRect;
@@ -20,7 +30,7 @@ public class Cursor : Token
     get { return _selObj; }
     }
 
-
+    public bool _Placeable = false;
     // 配置可能かどうか
     bool _bPlaceable = true;
     public bool Placeable
@@ -41,53 +51,38 @@ public class Cursor : Token
     }
     }
 
+    void Start()
+    {
+        target = transform.position;
+    }
+
     /// 更新
     public void Proc(Layer2D lCollision)
     {
-        // 座標を取得
-        Vector2 pos = transform.position;
-
-        // スティックを右に倒した時の処理
-        if (Input.GetAxis("Horizontal2-1p") > 0)
+        // ① 移動中かどうかの判定。移動中でなければ入力を受付
+        if (transform.position == target)
         {
-            // 右に移動する
-            pos.x += SPEED.x;
+            SetTargetPosition();
+            _Placeable = true;
         }
-
-        // スティックを左に倒した時の処理
-        if (Input.GetAxis("Horizontal2-1p") < 0)
+        else
         {
-            //左に移動する
-            pos.x -= SPEED.x;
+            _Placeable = false;
         }
+        Move();
 
-        // スティックを下に倒した時の処理
-        if (Input.GetAxis("Vertical2-1p") < 0)
-        {
-            // 下に移動する
-            pos.y += SPEED.y;
-        }
+        Vector2 posWorld = transform.position;
 
-        // スティックを上に倒した時の処理
-        if (Input.GetAxis("Vertical2-1p") > 0)
-        {
-            // 上に移動する
-            pos.y -= SPEED.y;
-        }
-        transform.position = pos;
         // スナップ処理
         // チップ座標系
-        int i = Field.ToChipX(pos.x);
-        int j = Field.ToChipY(pos.y);
-        // ワールド座標系に再変換
-        X = Field.ToWorldX(i);
-        Y = Field.ToWorldY(j);
+        int i = Field.ToChipX(posWorld.x);
+        int j = Field.ToChipY(posWorld.y);
 
         // 配置可能かチェック
-        //Placeable = (lCollision.Get(i, j) == 0);
+        Placeable = (lCollision.Get(i, j) == 0);
 
         // 領域外かどうかチェック
-        //Visible = (lCollision.IsOutOfRange(i, j) == false);
+        Visible = (lCollision.IsOutOfRange(i, j) == false);
 
         // 選択しているオブジェクトを設定
         SetSelObj();
@@ -105,5 +100,38 @@ public class Cursor : Token
         // 選択中のオブジェクトを格納
         _selObj = col.gameObject;
     }
+    }
+
+    void SetTargetPosition()
+    {
+
+        prevPos = target;
+
+        if (Input.GetAxis("Horizontal1p") > 0)
+        {
+            target = transform.position + MOVEX;
+            return;
+        }
+        if (Input.GetAxis("Horizontal1p") < 0)
+        {
+            target = transform.position - MOVEX;
+            return;
+        }
+        if (Input.GetAxis("Vertical1p") < 0)
+        {
+            target = transform.position + MOVEY;
+            return;
+        }
+        if (Input.GetAxis("Vertical1p") > 0)
+        {
+            target = transform.position - MOVEY;
+            return;
+        }
+    }
+
+    // ③ 目的地へ移動する
+    void Move()
+    {
+        transform.position = Vector3.MoveTowards(transform.position, target, step * Time.deltaTime);
     }
 }

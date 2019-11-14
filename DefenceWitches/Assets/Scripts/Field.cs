@@ -35,6 +35,12 @@ public class Field : Token
     {
     get { return _lCollision; }
     }
+    /// コリジョンレイヤー2
+    Layer2D _lCollision2;
+    public Layer2D lCollision2
+    {
+        get { return _lCollision2; }
+    }
 
     /// チップサイズの基準となるスプライトを取得する
     static Sprite GetChipSprite()
@@ -112,6 +118,7 @@ public class Field : Token
 
         // コリジョンレイヤーを取得する
         _lCollision = tmx.GetLayer("collision");
+        _lCollision2 = tmx.GetLayer("collision2");
     }
 
     /// パスを作る
