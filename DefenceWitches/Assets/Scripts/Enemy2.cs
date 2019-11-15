@@ -59,7 +59,7 @@ public class Enemy2 : Token
         _path = path;
         _pathIdx = 0;
         // 移動速度
-        _speed = EnemyParam.Speed();
+        _speed = EnemyParam.Speed2();
         _tSpeed = 0;
 
         // 移動先を更新
@@ -72,7 +72,7 @@ public class Enemy2 : Token
         FixedUpdate();
 
         // HPを設定する
-        _hp = EnemyParam.Hp();
+        _hp = EnemyParam.Hp2();
 
         // 所持金を設定
         _money = EnemyParam.Money();
@@ -82,7 +82,7 @@ public class Enemy2 : Token
     void FixedUpdate()
     {
         _tAnim++;
-        if (_tAnim % 32 < 16)
+        if (_tAnim%32 < 16)
         {
             SetSprite(spr0);
         }
@@ -108,7 +108,7 @@ public class Enemy2 : Token
     /// 次の移動先に進める
     protected void MoveNext()
     {
-        if (_pathIdx >= _path.Count)
+        if(_pathIdx >= _path.Count)
         {
             // ゴールにたどりついた
             _tSpeed = 100.0f;

@@ -74,7 +74,7 @@ public class GameMgr : MonoBehaviour
 
         // 敵管理を生成
         Enemy.parent = new TokenMgr<Enemy>("Enemy", 128);
-        //Enemy2.parent = new TokenMgr<Enemy2>("Enemy2", 128);
+        Enemy2.parent = new TokenMgr<Enemy2>("Enemy2", 128);
         // ショット管理を生成
         Shot.parent = new TokenMgr<Shot>("Shot", 128);
         // パーティクル管理を生成
@@ -195,7 +195,7 @@ public class GameMgr : MonoBehaviour
         // 敵生成管理の更新
         _enemyGenerator.Update();
         _enemyGenerator2.Update();
-        
+
         // カーソルの下にあるオブジェクトをチェック
         int mask = 1 << LayerMask.NameToLayer("Tower");
         Collider2D col = Physics2D.OverlapPoint(_cursor.GetPosition(), mask);
@@ -367,7 +367,7 @@ public class GameMgr : MonoBehaviour
         return false;
     }
 
-    if (Enemy.parent.Count() > 0)
+    if (Enemy.parent.Count() > 0 || Enemy2.parent.Count() > 0)
     {
         // 敵が存在するのでクリアしていない
         return false;
@@ -538,30 +538,36 @@ public class GameMgr : MonoBehaviour
     /// アップグレードを実行する
     void ExecUpgrade(Tower.eUpgrade type)
     {
-    // コストを取得する
-    int cost = _selTower.GetCost(type);
-    // 所持金を減らす
-    Global.UseMoney(cost);
+        if (_selObj != null)
+        {
+            // コストを取得する
+            int cost = _selTower.GetCost(type);
+            // 所持金を減らす
+            Global.UseMoney(cost);
 
-    // アップグレード実行
-    _selTower.Upgrade(type);
+            // アップグレード実行
+            _selTower.Upgrade(type);
 
-    // 射程範囲カーソルの大きさを反映
-    _cursorRange.SetVisible(true, _selTower.LvRange);
+            // 射程範囲カーソルの大きさを反映
+            _cursorRange.SetVisible(true, _selTower.LvRange);
+        }
     }
 
     /// アップグレードを実行する
     void ExecUpgrade2(Tower2.eUpgrade type)
     {
-    // コストを取得する
-    int cost = _selTower2.GetCost(type);
-    // 所持金を減らす
-    Global.UseMoney2(cost);
+        if (_selObj2 != null)
+        {
+            // コストを取得する
+            int cost = _selTower2.GetCost(type);
+            // 所持金を減らす
+            Global.UseMoney2(cost);
 
-    // アップグレード実行
-    _selTower2.Upgrade(type);
+            // アップグレード実行
+            _selTower2.Upgrade(type);
 
-    // 射程範囲カーソルの大きさを反映
-    _cursorRange.SetVisible(true, _selTower2.LvRange);
+            // 射程範囲カーソルの大きさを反映
+            _cursorRange.SetVisible(true, _selTower2.LvRange);
+        }
     }
 }

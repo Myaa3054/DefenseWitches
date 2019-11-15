@@ -23,7 +23,7 @@ public class EnemyGenerator2
     /// ②コンストラクタ
     public EnemyGenerator2(List<Vec2D> pathList)
     {
-    _pathList = pathList;
+        _pathList = pathList;
     }
 
     // ③開始
@@ -39,16 +39,16 @@ public class EnemyGenerator2
     /// ④更新
     public void Update()
     {
-    if(_number <= 0)
-    {
-        // ⑧すべての敵が出現したので何もしない
-        return;
-    }
+        if(_number <= 0)
+        {
+            // ⑧すべての敵が出現したので何もしない
+            return;
+        }
 
-    // ⑤経過時間を足し込む
-    _tInterval += Time.deltaTime;
-    // ⑥経過時間をチェック
-    if(_tInterval >= _interval)
+        // ⑤経過時間を足し込む
+        _tInterval += Time.deltaTime;
+        // ⑥経過時間をチェック
+        if(_tInterval >= _interval)
         {
             // インターバルを超えたので敵出現
             _tInterval -= _interval;

@@ -18,7 +18,7 @@ public class Enemy : Token
         }
         e.Init(path);
         return e;
-    }// プレハブから敵を生成
+    }
 
     // アニメーション用のスプライト
     public Sprite spr0;
@@ -51,42 +51,42 @@ public class Enemy : Token
     /// 画像の角度を更新
     void UpdateAngle()
     {
-    float dx = _next.x - _prev.x;
-    float dy = _next.y - _prev.y;
-    Angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
+        float dx = _next.x - _prev.x;
+        float dy = _next.y - _prev.y;
+        Angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
     }
 
     /// 初期化
     public void Init(List<Vec2D> path)
     {
-    // 経路をコピー
-    _path = path;
-    _pathIdx = 0;
-    // 移動速度
-    _speed = EnemyParam.Speed();
-    _tSpeed = 0;
+        // 経路をコピー
+        _path = path;
+        _pathIdx = 0;
+        // 移動速度
+        _speed = EnemyParam.Speed();
+        _tSpeed = 0;
 
-    // 移動先を更新
-    MoveNext();
-    // _prevに反映する
-    _prev.Copy(_next);
-    // 一つ下にずらす
-    _prev.y -= Field.GetChipSize();
-    // 一度座標を更新しておく
-    FixedUpdate();
+        // 移動先を更新
+        MoveNext();
+        // _prevに反映する
+        _prev.Copy(_next);
+        // 一つ下にずらす
+        _prev.y -= Field.GetChipSize();
+        // 一度座標を更新しておく
+        FixedUpdate();
 
-    // HPを設定する
-    _hp = EnemyParam.Hp();
+        // HPを設定する
+        _hp = EnemyParam.Hp();
 
-    // 所持金を設定
-    _money = EnemyParam.Money();
+        // 所持金を設定
+        _money = EnemyParam.Money();
     }
 
     // アニメーション更新
     void FixedUpdate()
     {
 	    _tAnim++;
-	    if(_tAnim%32 < 16)
+	    if (_tAnim%32 < 16)
 	    {
 		    SetSprite(spr0);
 	    }
@@ -95,77 +95,78 @@ public class Enemy : Token
 		    SetSprite(spr1);
 	    }
 
-    // 速度タイマー更新
-    _tSpeed += _speed;
-    if(_tSpeed >= 100.0f) {
-        // 移動先を次に進める
-        _tSpeed -= 100.0f;
-        MoveNext();
-    }
+        // 速度タイマー更新
+        _tSpeed += _speed;
+        if (_tSpeed >= 100.0f)
+        {
+            // 移動先を次に進める
+            _tSpeed -= 100.0f;
+            MoveNext();
+        }
 
-    // ⑤速度タイマーに対応する位置に線形補間で移動する
-    X = Mathf.Lerp(_prev.x, _next.x, _tSpeed / 100.0f);
-    Y = Mathf.Lerp(_prev.y, _next.y, _tSpeed / 100.0f);
+        // ⑤速度タイマーに対応する位置に線形補間で移動する
+        X = Mathf.Lerp(_prev.x, _next.x, _tSpeed / 100.0f);
+        Y = Mathf.Lerp(_prev.y, _next.y, _tSpeed / 100.0f);
     }
 
     /// 次の移動先に進める
     protected void MoveNext()
     {
-    if(_pathIdx >= _path.Count)
-    {
-        // ゴールにたどりついた
-        _tSpeed = 100.0f;
-        if (X < 0)
+        if(_pathIdx >= _path.Count)
         {
-            Global.Damage();
-        }
-        else
-        {
-            Global.Damage2();
-        }
-        //自爆する
-        Vanish();
+            // ゴールにたどりついた
+            _tSpeed = 100.0f;
+            if (X < 0)
+            {
+                Global.Damage();
+            }
+            else
+            {
+                Global.Damage2();
+            }
+            //自爆する
+            Vanish();
 
-        return;
-    }
-    // ⑧移動先を移動元にコピーする
-    _prev.Copy(_next);
+            return;
+        }
+        // ⑧移動先を移動元にコピーする
+        _prev.Copy(_next);
 
-    // ⑦チップ座標を取り出す
-    Vec2D v = _path[_pathIdx];
-    _next.x = Field.ToWorldX(v.X);
-    _next.y = Field.ToWorldY(v.Y);
-    // パス番号を進める
-    _pathIdx++;
+        // ⑦チップ座標を取り出す
+        Vec2D v = _path[_pathIdx];
+        _next.x = Field.ToWorldX(v.X);
+        _next.y = Field.ToWorldY(v.Y);
+        // パス番号を進める
+        _pathIdx++;
     }
 
     /// 衝突判定
     void OnTriggerEnter2D(Collider2D other)
     {
-    // レイヤー名を取得する
-    string name = LayerMask.LayerToName(other.gameObject.layer);
-    if(name == "Shot")
-    {
-        // ショットと衝突
-        Shot s = other.gameObject.GetComponent<Shot>();
-        // ショット消滅
-        s.Vanish();
-
-        // ダメージ処理をする
-        Damage(s.Power);
-
-        if (Exists == false)
+        // レイヤー名を取得する
+        string name = LayerMask.LayerToName(other.gameObject.layer);
+        if(name == "Shot")
         {
-            // 所持金を増やす
-            if (X < 0){
-                Global.AddMoney(_money);
-            }
+            // ショットと衝突
+            Shot s = other.gameObject.GetComponent<Shot>();
+            // ショット消滅
+            s.Vanish();
 
-            else{
-                Global.AddMoney2(_money);
+            // ダメージ処理をする
+            Damage(s.Power);
+
+            if (Exists == false)
+            {
+                // 所持金を増やす
+                if (X < 0){
+                    Global.AddMoney(_money);
+                }
+
+                else{
+                    Global.AddMoney2(_money);
+                }
             }
         }
-    }
     }
 
     /// ダメージを受けた
@@ -202,39 +203,38 @@ public class Enemy : Token
     /// 消滅
     public override void Vanish()
     {
-    // パーティクル生成
-    // リングエフェクト生成
-    {
-        // 生存時間は30フレーム。移動はしない
-        Particle p = Particle.Add(Particle.eType.Ring, 30, X, Y, 0, 0);
-        if(p)
+        // パーティクル生成
+        // リングエフェクト生成
         {
-        // 明るい緑
-        p.SetColor(0.7f, 1, 0.7f);
+            // 生存時間は30フレーム。移動はしない
+            Particle p = Particle.Add(Particle.eType.Ring, 30, X, Y, 0, 0);
+            if(p)
+            {
+            // 明るい緑
+            p.SetColor(0.7f, 1, 0.7f);
+            }
         }
-    }
 
-    // ボールエフェクト生成
-    float dir = Random.Range(35, 55);
-    for(int i = 0; i < 8; i++)
-    {
-        // 消滅フレーム数
-        int timer = Random.Range(20, 40);
-        // 移動速度
-        float spd = Random.Range(0.5f, 2.5f);
-        Particle p = Particle.Add(Particle.eType.Ball, timer, X, Y, dir, spd);
-        // 移動方向
-        dir += Random.Range(35, 55);
-        if(p)
+        // ボールエフェクト生成
+        float dir = Random.Range(35, 55);
+        for(int i = 0; i < 8; i++)
         {
-        // 緑色を設定
-        p.SetColor(0.0f, 1, 0.0f);
-        // 大きさを設定
-        p.Scale = 0.8f;
+            // 消滅フレーム数
+            int timer = Random.Range(20, 40);
+            // 移動速度
+            float spd = Random.Range(0.5f, 2.5f);
+            Particle p = Particle.Add(Particle.eType.Ball, timer, X, Y, dir, spd);
+            // 移動方向
+            dir += Random.Range(35, 55);
+            if(p)
+            {
+            // 緑色を設定
+            p.SetColor(0.0f, 1, 0.0f);
+            // 大きさを設定
+            p.Scale = 0.8f;
+            }
         }
-    }
-
-    // 親の消滅処理を呼び出す
-    base.Vanish();
+        // 親の消滅処理を呼び出す
+        base.Vanish();
     }
 }

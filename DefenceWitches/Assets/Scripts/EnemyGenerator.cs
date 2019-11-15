@@ -54,7 +54,7 @@ public class EnemyGenerator
             _tInterval -= _interval;
             // 敵を生成
             Enemy.Add(_pathList);
-            //Enemy2.Add(_pathList);
+            Enemy2.Add(_pathList);
             // ⑦敵生成カウンタを減らす
             _number--;
         }
