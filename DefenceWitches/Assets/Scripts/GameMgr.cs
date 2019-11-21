@@ -66,15 +66,19 @@ public class GameMgr : MonoBehaviour
     WaveStart _waveStart;
     // 射程範囲
     CursorRange _cursorRange;
+    //チュートリアル
+    public static float howtimer = 0f;
 
-    void Start ()
+    void Start()
     {
         // ゲームパラメータ初期化
         Global.Init();
 
         // 敵管理を生成
-        Enemy.parent = new TokenMgr<Enemy>("Enemy", 128);
-        Enemy2.parent = new TokenMgr<Enemy2>("Enemy2", 128);
+        Enemy.parent = new TokenMgr<Enemy>();
+        Enemy.parent.AddToken("Enemy", 128);
+        Enemy.parent.AddToken("Enemy2", 128);
+        //Enemy2.parent = new TokenMgr<Enemy2>("Enemy2", 128);
         // ショット管理を生成
         Shot.parent = new TokenMgr<Shot>("Shot", 128);
         // パーティクル管理を生成
@@ -120,12 +124,19 @@ public class GameMgr : MonoBehaviour
         ChangeSelMode(eSelMode.None);
         ChangeSelMode2(eSelMode2.None);
 
-        Tower.Add(-1.12f, -1.6f);
-        Tower2.Add(1.12f, -1.6f);
+        //初期タワー配置
+        Tower.Add(-1.12f,-1.76f);
+        Tower2.Add(1.12f,-1.76f);
     }
 
     void Update()
     {
+        //チュートリアルタイマー更新
+        if (Title.Howdo == true)
+        {
+            howtimer += 0.01f;
+        }
+
         // GUIを更新
         _gui.Update(_selMode, _selTower);
         _gui2.Update2(_selMode2, _selTower2);
@@ -144,7 +155,7 @@ public class GameMgr : MonoBehaviour
                 _enemyGenerator.Start(Global.Wave);
                 _enemyGenerator2.Start(Global.Wave);
 
-                // Wave開始演出を呼び出す (※ここを追加)
+                // Wave開始演出を呼び出す
                 _waveStart.Begin(Global.Wave);
                 // メイン状態に遷移する
                 _state = eState.Main;
@@ -184,7 +195,6 @@ public class GameMgr : MonoBehaviour
                 // ⑤やり直し
                 SceneManager.LoadScene("MainScene");
             }
-
             break;
         }
     }
@@ -236,7 +246,7 @@ public class GameMgr : MonoBehaviour
                             if (_cursor.Placeable)
                             {
                                 if (_cursor._Placeable)
-                                { 
+                                {
                                     // 所持金を減らす
                                     int cost = Cost.TowerProduction();
                                     if (Global.Money < cost)
@@ -250,7 +260,7 @@ public class GameMgr : MonoBehaviour
                                         // 何もないので砲台を配置
                                         Tower.Add(_cursor.X, _cursor.Y);
                                         // 次のタワーの生産コストを取得する
-                                        int cost2 = Cost.TowerProduction();
+                                        int cost2 = Cost.TowerProduction2();
                                         if (Global.Money < cost)
                                         {
                                             // お金が足りないので通常モードに戻る
@@ -306,7 +316,7 @@ public class GameMgr : MonoBehaviour
                                         // 何もないので砲台を配置
                                         Tower2.Add(_cursor2.X, _cursor2.Y);
                                         // 次のタワーの生産コストを取得する
-                                        int cost2 = Cost.TowerProduction();
+                                        int cost2 = Cost.TowerProduction2();
                                         if (Global.Money2 < cost2)
                                         {
                                             // お金が足りないので通常モードに戻る
@@ -349,7 +359,7 @@ public class GameMgr : MonoBehaviour
 
         if (Input.GetButtonDown("Power1p"))
         {
-            OnClickPower2();
+            OnClickPower();
         }
 
         if (Input.GetButtonDown("Power2p"))
@@ -542,14 +552,16 @@ public class GameMgr : MonoBehaviour
         {
             // コストを取得する
             int cost = _selTower.GetCost(type);
-            // 所持金を減らす
-            Global.UseMoney(cost);
+            if(cost <= Global.Money){
+                // 所持金を減らす
+                Global.UseMoney(cost);
 
-            // アップグレード実行
-            _selTower.Upgrade(type);
+                // アップグレード実行
+                _selTower.Upgrade(type);
 
-            // 射程範囲カーソルの大きさを反映
-            _cursorRange.SetVisible(true, _selTower.LvRange);
+                // 射程範囲カーソルの大きさを反映
+                _cursorRange.SetVisible(true, _selTower.LvRange);
+            }
         }
     }
 
@@ -560,14 +572,16 @@ public class GameMgr : MonoBehaviour
         {
             // コストを取得する
             int cost = _selTower2.GetCost(type);
-            // 所持金を減らす
-            Global.UseMoney2(cost);
+            if(cost <= Global.Money2){
+                // 所持金を減らす
+                Global.UseMoney2(cost);
 
-            // アップグレード実行
-            _selTower2.Upgrade(type);
+                // アップグレード実行
+                _selTower2.Upgrade(type);
 
-            // 射程範囲カーソルの大きさを反映
-            _cursorRange.SetVisible(true, _selTower2.LvRange);
+                // 射程範囲カーソルの大きさを反映
+                _cursorRange.SetVisible(true, _selTower2.LvRange);
+            }
         }
     }
 }

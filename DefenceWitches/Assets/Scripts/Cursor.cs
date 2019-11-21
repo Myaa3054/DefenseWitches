@@ -8,10 +8,10 @@ public class Cursor : Token
     // x軸方向に１マス移動するときの距離
     Vector3 MOVEX = new Vector3(0.32f, 0, 0);
     // y軸方向に１マス移動するときの距離
-    Vector3 MOVEY = new Vector3(0, 0.32f, 0);
+    Vector3 MOVEY = new Vector3(0, 0.96f, 0);
 
     // 移動速度
-    float step = 2f;
+    float step = 4f;
     // 入力受付時、移動後の位置を算出して保存
     Vector3 target;
     // 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
@@ -107,25 +107,37 @@ public class Cursor : Token
 
         prevPos = target;
 
-        if (Input.GetAxis("Horizontal1p") > 0)
+        if (Input.GetAxis("Horizontal1p") > 0 || Input.GetKey("right"))  
         {
-            target = transform.position + MOVEX;
-            return;
+            if (transform.position.x <= -1.12f)
+            {
+                target = transform.position + MOVEX;
+                return;
+            }
         }
-        if (Input.GetAxis("Horizontal1p") < 0)
+        if (Input.GetAxis("Horizontal1p") < 0 || Input.GetKey("left"))
         {
-            target = transform.position - MOVEX;
-            return;
+            if (transform.position.x >= -2.08f)
+            {
+                target = transform.position - MOVEX;
+                return;
+            }
         }
-        if (Input.GetAxis("Vertical1p") < 0)
+        if (Input.GetAxis("Vertical1p") < 0 || Input.GetKey("up"))
         {
-            target = transform.position + MOVEY;
-            return;
+            if (transform.position.y < 2.04f)
+            {
+                target = transform.position + MOVEY;
+                return;
+            }
         }
-        if (Input.GetAxis("Vertical1p") > 0)
+        if (Input.GetAxis("Vertical1p") > 0 || Input.GetKey("down"))
         {
-            target = transform.position - MOVEY;
-            return;
+            if (transform.position.y > -1.76f)
+            {
+                target = transform.position - MOVEY;
+                return;
+            }
         }
     }
 

@@ -49,7 +49,7 @@ public class Tower : Token
     public static TokenMgr<Tower> parent;
     // タワー生成
     public static Tower Add(float px, float py) {
-    Tower t = parent.Add(px, py);
+    Tower t = parent.Add<Tower>(px, py);
     if(t == null) {
         return null;
     }
@@ -153,18 +153,17 @@ public class Tower : Token
 
         // 一番近い敵を求める(④)
         Enemy e = Enemy.parent.Nearest(this);
+
         if (e == null)
         {
-        // 敵がいないので何もしない
+            // 敵がいないので何もしない
         return;
         }
+
+
         // 敵への距離を取得する(⑤)
         float dist = Util.DistanceBetween(this, e);
-        float targetAngle;
-
-        // 敵への角度を取得(⑥)
-        targetAngle = Util.AngleBetween(this, e);
-       
+        float targetAngle = Util.AngleBetween(this, e);
 
         if (dist > _range)
         {

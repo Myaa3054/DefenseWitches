@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 using System.Collections;
+using UnityEngine.UI;
 
 public class Gui
 {
@@ -21,31 +23,93 @@ public class Gui
     // 攻撃威力
     ButtonObj _btnPower;
 
+    //チュートリアル
+    bool HowEne = true;
+    bool HowTow = true;
+    bool HowUp = true;
+
     /// コンストラクタ
     public Gui()
-    {
-    // Wave数
-    _txtWave = MyCanvas.Find<TextObj>("TextWave");
-    // 所持金テキスト
-    _txtMoney = MyCanvas.Find<TextObj>("TextMoney");
-    // コストテキスト
-    _txtCost = MyCanvas.Find<TextObj>("TextCost");
-    _txtCost.Label = "";
-    // 購入ボタン
-    _btnBuy = MyCanvas.Find<ButtonObj>("ButtonBuy");
-    // タワー情報を取得する
-    _txtTowerInfo = MyCanvas.Find<TextObj>("TextTowerInfo");
-    // 射程範囲ボタン
-    _btnRange = MyCanvas.Find<ButtonObj>("ButtonRange");
-    // 連射速度ボタン
-    _btnFirerate = MyCanvas.Find<ButtonObj>("ButtonFirerate");
-    // 攻撃威力ボタン
-    _btnPower = MyCanvas.Find<ButtonObj>("ButtonPower");
+    {   
+        // Wave数
+        _txtWave = MyCanvas.Find<TextObj>("TextWave");
+        // 所持金テキスト
+        _txtMoney = MyCanvas.Find<TextObj>("TextMoney");
+        // コストテキスト
+        _txtCost = MyCanvas.Find<TextObj>("TextCost");
+        _txtCost.Label = "";
+        // 購入ボタン
+        _btnBuy = MyCanvas.Find<ButtonObj>("ButtonBuy");
+        // タワー情報を取得する
+        _txtTowerInfo = MyCanvas.Find<TextObj>("TextTowerInfo");
+        // 射程範囲ボタン
+        _btnRange = MyCanvas.Find<ButtonObj>("ButtonRange");
+        // 連射速度ボタン
+        _btnFirerate = MyCanvas.Find<ButtonObj>("ButtonFirerate");
+        // 攻撃威力ボタン
+        _btnPower = MyCanvas.Find<ButtonObj>("ButtonPower");
     }
 
     /// 更新
     public void Update(GameMgr.eSelMode selMode, Tower tower)
     {
+        //チュートリアル表示
+        if (GameMgr.howtimer >= 0.1f && GameMgr.howtimer <= 3.2f)
+        {
+            MyCanvas.SetActive("TextHowSta", true);
+        }
+        if (HowEne == true){
+            if (GameMgr.howtimer >= 3.2f)
+            {
+                MyCanvas.SetActive("TextHowSta", false);
+                MyCanvas.SetActive("TextHowEne", true);
+                Time.timeScale = 0f;
+            }
+            if (Input.GetButtonDown("Cancel"))
+            {
+                MyCanvas.SetActive("TextHowSta", false);
+                MyCanvas.SetActive("TextHowEne", false);
+                Time.timeScale = 1f;
+                HowEne = false;
+            }
+        }
+        else
+        {
+            if (HowTow == true)
+            {
+                if (GameMgr.howtimer >= 4)
+                {
+                    MyCanvas.SetActive("TextHowTow", true);
+                    Time.timeScale = 0.2f;
+                }
+                if (Tower.parent.Count() >= 2 && Tower2.parent.Count() >= 2) 
+                {
+                    MyCanvas.SetActive("TextHowTow", false);
+                    Time.timeScale = 1f;
+                    HowTow = false;
+                }
+            }
+            else
+            {
+                if (HowUp == true)
+                {
+                    if (GameMgr.howtimer >= 5)
+                    {
+                        MyCanvas.SetActive("TextHowUp", true);
+                        Time.timeScale = 0.2f;
+                    }
+                    if (true)
+                    {
+                        MyCanvas.SetActive("TextHowUp", false);
+                        Time.timeScale = 1f;
+                        HowUp = false;
+                    }
+                }
+            }
+        }
+        
+
+
         // Wave数を更新
         _txtWave.SetLabelFormat("Wave: {0}", Global.Wave);
         _txtMoney.SetLabelFormat("MP: {0}", Global.Money);

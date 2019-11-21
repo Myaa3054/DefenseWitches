@@ -9,7 +9,7 @@ public class Shot : Token
   // ショットを撃つ
   public static Shot Add(float px, float py, float direction, float speed, int power)
   {
-    Shot s = parent.Add(px, py, direction, speed);
+    Shot s = parent.Add<Shot>(px, py, direction, speed);
     if (s == null)
     {
       return null;

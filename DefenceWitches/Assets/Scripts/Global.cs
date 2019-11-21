@@ -18,8 +18,8 @@ public class Global
     /// 所持金
     // 初期値
     const int MONEY_INIT = 30;
-    static int _money;
-    static int _money2;
+    public static int _money;
+    public static int _money2;
     public static int Money
     {
     get { return _money; }

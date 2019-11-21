@@ -3,15 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 
 /// 敵クラス
-public class Enemy2 : Token
+public class Enemy2 : Enemy
 {
-    /// 管理オブジェクト
-    public static TokenMgr<Enemy2> parent = null;
+    // 管理オブジェクト
+    //public static TokenMgr<Enemy2> parent = null;
 
     // プレハブから敵を生成
-    public static Enemy2 Add(List<Vec2D> path)
+    new public static Enemy2 Add(List<Vec2D> path)
     {
-        Enemy2 e = parent.Add(0, 0);
+        Enemy2 e = parent.Add<Enemy2>(0, 0);
         if (e == null)
         {
             return null;
@@ -20,40 +20,7 @@ public class Enemy2 : Token
         return e;
     }
 
-    // アニメーション用のスプライト
-    public Sprite spr0;
-    public Sprite spr1;
-
-    // HP
-    public int _hp;
-
-    // 所持金
-    public int _money;
-
-    // アニメーションタイマー
-    protected int _tAnim = 0;
-
-    // 速度パラメータ
-    protected float _speed = 0; // 速度
-    protected float _tSpeed = 0; // 補完値(0.0〜100.0)
-    // 経路座標のリスト
-    public List<Vec2D> _path;
-    // 経路の現在の番号
-    public int _pathIdx;
-    // チップ座標
-    protected Vec2D _prev; // 1つ前
-    protected Vec2D _next; // 1つ先
-
-    /// 画像の角度を更新
-    void UpdateAngle()
-    {
-        float dx = _next.x - _prev.x;
-        float dy = _next.y - _prev.y;
-        Angle = Mathf.Atan2(dy, dx) * Mathf.Rad2Deg;
-    }
-
-    /// 初期化
-    public void Init(List<Vec2D> path)
+    new public void Init(List<Vec2D> path)
     {
         // 経路をコピー
         _path = path;
@@ -76,64 +43,6 @@ public class Enemy2 : Token
 
         // 所持金を設定
         _money = EnemyParam.Money();
-    }
-
-    // アニメーション更新
-    void FixedUpdate()
-    {
-        _tAnim++;
-        if (_tAnim%32 < 16)
-        {
-            SetSprite(spr0);
-        }
-        else
-        {
-            SetSprite(spr1);
-        }
-
-        // 速度タイマー更新
-        _tSpeed += _speed;
-        if (_tSpeed >= 100.0f)
-        {
-            // 移動先を次に進める
-            _tSpeed -= 100.0f;
-            MoveNext();
-        }
-
-        // ⑤速度タイマーに対応する位置に線形補間で移動する
-        X = Mathf.Lerp(_prev.x, _next.x, _tSpeed / 100.0f);
-        Y = Mathf.Lerp(_prev.y, _next.y, _tSpeed / 100.0f);
-    }
-
-    /// 次の移動先に進める
-    protected void MoveNext()
-    {
-        if(_pathIdx >= _path.Count)
-        {
-            // ゴールにたどりついた
-            _tSpeed = 100.0f;
-            if (X < 0)
-            {
-                Global.Damage();
-            }
-            else
-            {
-                Global.Damage2();
-            }
-            //自爆する
-            Vanish();
-
-            return;
-        }
-        // ⑧移動先を移動元にコピーする
-        _prev.Copy(_next);
-
-        // ⑦チップ座標を取り出す
-        Vec2D v = _path[_pathIdx];
-        _next.x = Field.ToWorldX(v.X);
-        _next.y = Field.ToWorldY(v.Y);
-        // パス番号を進める
-        _pathIdx++;
     }
 
     /// 衝突判定
@@ -175,18 +84,26 @@ public class Enemy2 : Token
         if (_hp <= 0)
         {
             // HPがなくなったので死亡
-            Vanish();
             if (Y > 0.64)
             {
                 if (X < 0)
                 {
-                    Add(GameMgr._path2);
+                    if (refcount1 > 0)
+                    {
+                        Add(GameMgr._path2);
+                        refcount1 -= 1;
+                    }
                 }
                 else
                 {
-                    Add(GameMgr._path);
+                    if (refcount2 > 0)
+                    {
+                        Add(GameMgr._path);
+                        refcount2 -= 1;
+                    }
                 }
             }
+            Vanish();
         }
     }
 

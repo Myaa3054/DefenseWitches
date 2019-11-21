@@ -49,7 +49,7 @@ public class Tower2 : Token
     public static TokenMgr<Tower2> parent;
     // タワー生成
     public static Tower2 Add(float px, float py) {
-    Tower2 t = parent.Add(px, py);
+    Tower2 t = parent.Add<Tower2>(px, py);
     if(t == null) {
         return null;
     }

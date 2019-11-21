@@ -8,10 +8,10 @@ public class Cursor2 : Token
     // x軸方向に１マス移動するときの距離
     Vector3 MOVEX = new Vector3(0.32f, 0, 0);
     // y軸方向に１マス移動するときの距離
-    Vector3 MOVEY = new Vector3(0, 0.32f, 0);
+    Vector3 MOVEY = new Vector3(0, 0.96f, 0);
 
     // 移動速度
-    float step = 2f;
+    float step = 4f;
     // 入力受付時、移動後の位置を算出して保存
     Vector3 target;
     // 何らかの理由で移動できなかった場合、元の位置に戻すため移動前の位置を保存
@@ -110,23 +110,35 @@ public class Cursor2 : Token
 
         if (Input.GetAxis("Horizontal2p") > 0)
         {
-            target = transform.position + MOVEX;
-            return;
+            if (transform.position.x <= 2.24f)
+            {
+                target = transform.position + MOVEX;
+                return;
+            }
         }
         if (Input.GetAxis("Horizontal2p") < 0)
         {
-            target = transform.position - MOVEX;
-            return;
+            if (transform.position.x >= 1.12f)
+            {
+                target = transform.position - MOVEX;
+                return;
+            }
         }
         if (Input.GetAxis("Vertical2p") < 0)
         {
-            target = transform.position + MOVEY;
-            return;
+            if (transform.position.y < 2.04f)
+            {
+                target = transform.position + MOVEY;
+                return;
+            }
         }
         if (Input.GetAxis("Vertical2p") > 0)
         {
-            target = transform.position - MOVEY;
-            return;
+            if (transform.position.y > -1.76f)
+            {
+                target = transform.position - MOVEY;
+                return;
+            }
         }
     }
 

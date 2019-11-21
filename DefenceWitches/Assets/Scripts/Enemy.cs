@@ -11,7 +11,7 @@ public class Enemy : Token
     // プレハブから敵を生成
     public static Enemy Add(List<Vec2D> path)
     {
-        Enemy e = parent.Add(0, 0);
+        Enemy e = parent.Add<Enemy>(0, 0);
         if(e == null)
         {
             return null;
@@ -83,7 +83,7 @@ public class Enemy : Token
     }
 
     // アニメーション更新
-    void FixedUpdate()
+    public void FixedUpdate()
     {
 	    _tAnim++;
 	    if (_tAnim%32 < 16)
