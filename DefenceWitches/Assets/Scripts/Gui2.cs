@@ -50,7 +50,7 @@ public class Gui2
         _txtWave.SetLabelFormat("Wave: {0}", Global.Wave);
         _txtMoney2.SetLabelFormat("MP: {0}", Global.Money2);
         // 生産コストを取得する
-        int cost = Cost.TowerProduction();
+        int cost = Cost.TowerProduction2();
         _txtCost2.Label = "";
         if (selMode2 == GameMgr.eSelMode2.Buy)
         {

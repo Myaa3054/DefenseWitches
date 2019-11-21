@@ -8,13 +8,13 @@ public class TowerParam
   public static float Range(int lv)
   {
     float size = Field.GetChipSize();
-    return size + (0.5f * size * lv);
+    return size + (1.0f * size * lv);
   }
 
   /// 連射速度
   public static float Firerate(int lv)
   {
-    return 2.0f * (Mathf.Pow(0.9f, (lv - 1)));
+    return 4.0f * (0.5f * lv);
   }
 
   /// 攻撃威力

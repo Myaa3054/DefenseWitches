@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+﻿    using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -53,8 +53,15 @@ public class EnemyGenerator
             // インターバルを超えたので敵出現
             _tInterval -= _interval;
             // 敵を生成
-            Enemy.Add(_pathList);
-            Enemy2.Add(_pathList);
+            int ranene = Random.Range(0, 2);
+            if (ranene == 0)
+            {
+                Enemy.Add(_pathList);
+            }
+            if (ranene == 1)
+            {
+                Enemy2.Add(_pathList);
+            }
             // ⑦敵生成カウンタを減らす
             _number--;
         }

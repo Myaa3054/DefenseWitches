@@ -293,7 +293,7 @@ public class GameMgr : MonoBehaviour
                                 if (_cursor2._Placeable)
                                 {
                                     // 所持金を減らす
-                                    int cost = Cost.TowerProduction();
+                                    int cost = Cost.TowerProduction2();
                                     if (Global.Money2 < cost)
                                     {
                                         // お金が足りないので通常モードに戻る
@@ -305,7 +305,7 @@ public class GameMgr : MonoBehaviour
                                         // 何もないので砲台を配置
                                         Tower2.Add(_cursor2.X, _cursor2.Y);
                                         // 次のタワーの生産コストを取得する
-                                        int cost2 = Cost.TowerProduction();
+                                        int cost2 = Cost.TowerProduction2();
                                         if (Global.Money2 < cost2)
                                         {
                                             // お金が足りないので通常モードに戻る
