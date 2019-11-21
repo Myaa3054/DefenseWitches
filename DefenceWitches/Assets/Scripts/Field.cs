@@ -78,7 +78,7 @@ public class Field : Token
     var spr = GetChipSprite();
     var sprW = spr.bounds.size.x;
     //1.07は黒帯の長さ
-    return (int)((x - min.x - 1.07f - sprW/2) / sprW);
+    return (int)((x - min.x - 1.07f) / sprW);
     }
 
     /// ワールド座標をチップ座標系のY座標に変換する.

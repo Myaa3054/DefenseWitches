@@ -20,7 +20,7 @@ public class Particle : Token
   public static TokenMgr<Particle> parent;
   public static Particle Add(eType type, int timer, float px, float py, float direction, float speed)
   {
-    Particle p = parent.Add(px, py, direction, speed);
+    Particle p = parent.Add<Particle>(px, py, direction, speed);
     if(p == null)
     {
       return null;
