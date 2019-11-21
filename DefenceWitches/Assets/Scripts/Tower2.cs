@@ -101,16 +101,16 @@ public class Tower2 : Token
 
         // レベルに対する色を設定
         // 平均レベルを計算
-        float avg = (_lvRange + _lvFirerate + _lvPower) / 3.0f;
+        float avg = (_lvRange + _lvFirerate + _lvPower) / 1.0f;
         // 小数点以下を切り上げする
         int avgLv = Mathf.CeilToInt(avg);
         Color c;
         switch (avgLv)
         {
-            case 1: c = Color.white; break; // 白色
-            case 2: c = Color.cyan; break; // シアン
-            case 3: c = Color.green; break; // 緑色
-            case 4: c = Color.yellow; break; // 黄色
+            case 3: c = Color.white; break; // 白色
+            case 4: c = Color.cyan; break; // シアン
+            case 5: c = Color.green; break; // 緑色
+            case 6: c = Color.yellow; break; // 黄色
             default: c = Color.red; break; // 赤色
         }
         // 少し明るくする
